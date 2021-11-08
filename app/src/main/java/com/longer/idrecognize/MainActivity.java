@@ -3,7 +3,6 @@ package com.longer.idrecognize;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -19,13 +18,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -52,9 +46,6 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.id_card5,
             R.drawable.id_card6
     };
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,51 +133,24 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int RC_CAMERA_AND_LOCATION = 0x0001;
 
-    private  static final int PERMISSION_REQUEST=1;
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//
-//        // Forward results to EasyPermissions
-//        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-//    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
 
     @AfterPermissionGranted(RC_CAMERA_AND_LOCATION)
     private void methodRequiresTwoPermission() {
         String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
-        List<String> mPermissionList = new ArrayList();
-        for(int i=0;i<perms.length;i++){
-            if(ContextCompat.checkSelfPermission(this,perms[i])!= PackageManager.PERMISSION_GRANTED)
-                mPermissionList.add(perms[i]);
-        }
-
-        if(mPermissionList.isEmpty()){
-
-        }
-        else{
-            String[] permissions = mPermissionList.toArray(new String[mPermissionList.size()]);
-            ActivityCompat.requestPermissions(MainActivity.this,perms,PERMISSION_REQUEST);
-        }
-
-//        if (EasyPermissions.hasPermissions(this, perms)) {
-//            Toast.makeText(MainActivity.this, "有权限", Toast.LENGTH_SHORT).show();
-//            initTess();
-//        } else {
-//            // Do not have permissions, request them now
-//            EasyPermissions.requestPermissions(this, "我要权限",
-//                    RC_CAMERA_AND_LOCATION, perms);
-//        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,String[] permissions,int[] grantResults){
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case PERMISSION_REQUEST:
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                break;
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            Toast.makeText(MainActivity.this, "有权限", Toast.LENGTH_SHORT).show();
+            initTess();
+        } else {
+            // Do not have permissions, request them now
+            EasyPermissions.requestPermissions(this, "我要权限",
+                    RC_CAMERA_AND_LOCATION, perms);
         }
     }
 
