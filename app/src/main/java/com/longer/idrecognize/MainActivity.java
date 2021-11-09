@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
         //14 用之前得先初始化
         //15 文字识别
         tessBaseApi.setImage(bitmap5);
-        tesstext.setText("省份证号码：" + tessBaseApi.getUTF8Text());
+        tesstext.setText("身份证号码：" + tessBaseApi.getUTF8Text());
     }
 
     private native Bitmap cropImage(Bitmap bitmap4, Bitmap.Config argb8888);
