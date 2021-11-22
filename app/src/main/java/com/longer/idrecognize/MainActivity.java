@@ -285,6 +285,14 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+<<<<<<< HEAD
+=======
+        //OCR文字识别
+        //14 用之前得先初始化
+        //15 文字识别
+        tessBaseApi.setImage(bitmap5);
+        tesstext.setText("身份证号码：" + tessBaseApi.getUTF8Text());
+>>>>>>> 2a89e9ac6e28470771baa10656a82ccd748b6de4
     }
 
     private native Bitmap cropImage(Bitmap bitmap4, Bitmap.Config argb8888);
