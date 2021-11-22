@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -146,7 +147,17 @@ public class MainActivity extends AppCompatActivity {
         String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
         if (EasyPermissions.hasPermissions(this, perms)) {
             Toast.makeText(MainActivity.this, "有权限", Toast.LENGTH_SHORT).show();
+
+            long startTime = System.currentTimeMillis(); //起始时间
+//            doSomething();
+
             initTess();
+
+            long endTime = System.currentTimeMillis(); //结束时间
+            long runTime = endTime - startTime;
+            Log.i("test", String.format("初始化ocr 使用时间 %d ms", runTime));
+
+
         } else {
             // Do not have permissions, request them now
             EasyPermissions.requestPermissions(this, "我要权限",
@@ -195,35 +206,85 @@ public class MainActivity extends AppCompatActivity {
         //从原图Bitmap中查找，得到号码的Bitmap
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), ids[index]);
 
-        // 灰度化
-        Bitmap bitmap1 = removeColor(bitmap, Bitmap.Config.ARGB_8888);
-        img_step_1.setImageBitmap(bitmap1);
+        long startTime = System.currentTimeMillis(); //起始时间
 
-        // 二值化
-        Bitmap bitmap2 = twoColor(bitmap1, Bitmap.Config.ARGB_8888);
-        img_step_2.setImageBitmap(bitmap2);
+            Bitmap bitmap1 = removeColor(bitmap, Bitmap.Config.ARGB_8888);
+            img_step_1.setImageBitmap(bitmap1);
+            // 灰度化
 
-        // 膨胀处理
-        Bitmap bitmap3 = swellImg(bitmap2, Bitmap.Config.ARGB_8888);
-        img_step_3.setImageBitmap(bitmap3);
+        long endTime = System.currentTimeMillis(); //结束时间
+        long runTime = endTime - startTime;
+        Log.i("test", String.format("灰度化使用时间 %d ms", runTime));
 
-        // 轮廓监测
-        Bitmap bitmap4 = outSideImage(bitmap3, Bitmap.Config.ARGB_8888);
-        img_step_4.setImageBitmap(bitmap4);
 
-        // 图像切割
-        Bitmap bitmap5 = cropImage(bitmap, Bitmap.Config.ARGB_8888);
-        if (bitmap5 == null) {
-            Toast.makeText(MainActivity.this, "未识别到号码区域", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        img_step_5.setImageBitmap(bitmap5);
+        long startTime1 = System.currentTimeMillis(); //起始时间
+        //doSomething();
 
-        //OCR文字识别
-        //14 用之前得先初始化
-        //15 文字识别
-        tessBaseApi.setImage(bitmap5);
-        tesstext.setText("省份证号码：" + tessBaseApi.getUTF8Text());
+            // 二值化
+            Bitmap bitmap2 = twoColor(bitmap1, Bitmap.Config.ARGB_8888);
+            img_step_2.setImageBitmap(bitmap2);
+
+//        long endTime1 = System.currentTimeMillis(); //结束时间
+//        long runTime1 = endTime1 - startTime1;
+//        Log.i("test", String.format("二值化使用时间 %d ms", runTime1));
+
+
+//        long startTime2 = System.currentTimeMillis(); //起始时间
+        //doSomething();
+
+            // 膨胀处理
+            Bitmap bitmap3 = swellImg(bitmap2, Bitmap.Config.ARGB_8888);
+            img_step_3.setImageBitmap(bitmap3);
+
+//        long endTime2 = System.currentTimeMillis(); //结束时间
+//        long runTime2 = endTime2 - startTime2;
+//        Log.i("test", String.format("膨胀处理使用时间 %d ms", runTime2));
+
+
+//        long startTime3 = System.currentTimeMillis(); //起始时间
+        //doSomething();
+
+            // 轮廓监测
+            Bitmap bitmap4 = outSideImage(bitmap3, Bitmap.Config.ARGB_8888);
+            img_step_4.setImageBitmap(bitmap4);
+
+//        long endTime3 = System.currentTimeMillis(); //结束时间
+//        long runTime3 = endTime3 - startTime3;
+//        Log.i("test", String.format("轮廓检测使用时间 %d ms", runTime3));
+
+
+//        long startTime4 = System.currentTimeMillis(); //起始时间
+        //doSomething();
+
+            // 图像切割
+            Bitmap bitmap5 = cropImage(bitmap, Bitmap.Config.ARGB_8888);
+            if (bitmap5 == null) {
+                Toast.makeText(MainActivity.this, "未识别到号码区域", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            img_step_5.setImageBitmap(bitmap5);
+
+        long endTime1 = System.currentTimeMillis(); //结束时间
+        long runTime1 = endTime1 - startTime1;
+        Log.i("test", String.format("图像切割使用时间 %d ms", runTime1));
+
+
+        long startTime5 = System.currentTimeMillis(); //起始时间
+        //doSomething();
+
+            //OCR文字识别
+            //14 用之前得先初始化
+            //15 文字识别
+            tessBaseApi.setImage(bitmap5);
+            tesstext.setText("省份证号码：" + tessBaseApi.getUTF8Text());
+
+        long endTime5 = System.currentTimeMillis(); //结束时间
+        long runTime5 = endTime - startTime;
+        Log.i("test", String.format("识别使用时间 %d ms", runTime5));
+
+
+
+
     }
 
     private native Bitmap cropImage(Bitmap bitmap4, Bitmap.Config argb8888);
